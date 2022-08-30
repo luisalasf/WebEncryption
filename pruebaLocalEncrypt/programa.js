@@ -158,41 +158,6 @@ function parseEcPub(u8, jwk) {
   };
 }
 
-function parseEcOnlyPrivkey(u8, jwk) {
- let olen = OBJ_ID_EC_384.length/2;
- let index = 8;
- let len = 48;
-  console.log(u8);
-  console.log(u8[index - 1]);
- if (len !== u8[index - 1]) {
-    throw new Error("Unexpected bitlength " + len);
-  }
-
-  // private part is d
-  var d = u8.slice(index, index + len);
-  // compression bit index
-  var ci = index + len + 2 + olen + 2 + 3;
-  var c = u8[ci];
-  var x, y;
-
-  if (0x04 === c) {
-    y = u8.slice(ci + 1 + len, ci + 1 + len + len);
-  } else if (0x02 !== c) {
-    throw new Error("not a supported EC private key");
-  }
-  x = u8.slice(ci + 1, ci + 1 + len);
-
-  return {
-    kty: jwk.kty
-  , crv: jwk.crv
-  , d: PEM._toUrlSafeBase64(d)
-  //, dh: d
-  , x: PEM._toUrlSafeBase64(x)
-  //, xh: x
-  , y: PEM._toUrlSafeBase64(y)
-  //, yh: y
-  };
-}
 
 const BotonGenerar = document.getElementById("GenerarKey");
 var parDeLlaves = {};
